@@ -11,7 +11,6 @@ def read_rows(args):
     key = args.api_key
     filename = args.filename
     file_data = []
-    # service_obj = {}
     with open(filename, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -21,7 +20,6 @@ def read_rows(args):
                                                               "type": row["escalation_policy.type"]}}}
             file_data.append(service_dict)
     print(file_data)
-    # return file_data
     import_services(key, file_data)
 
 
@@ -45,9 +43,6 @@ def main():
     parser.add_argument('-k', '--api-key', required=True, help='Global REST API key')
     parser.add_argument('-f', '--filename', required=True, help='CSV file of services to import')
     args = parser.parse_args()
-    # key = args.api_key
-    # filename = args.filename
-    # read_rows(filename)
     read_rows(args)
 
 
