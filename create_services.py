@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-
 import requests
 import chardet
 import argparse
@@ -11,6 +10,22 @@ def exit_program():
     """ Exit program """
     print("Goodbye!")
     sys.exit()
+
+
+def ask_user_to_confirm(field_name, row):
+    """ While loop asking user to confirm continuing or exiting """
+    while True:
+        user_input = ask_question(f"Regarding row: \n{row}\n{field_name} is blank. Continue? [Y/N] --> ")
+        answer = user_input.upper()
+        if answer == "Y":
+            print(f"Your response: {answer}\n")
+            break
+        elif answer == "N":
+            print(f"Your response: {answer}")
+            exit_program()
+        else:
+            print("\nInvalid response, please try again\n")
+    return answer
 
 
 def ask_question(prompt):
@@ -27,44 +42,18 @@ def read_rows(args):
     with open(filename, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            if not row["name"]:
-                while True:
-                    user_input = ask_question(f"Regarding row: \n{row}\nName is blank. This will throw a "
-                                              f"400 error and row will not be imported. Continue? [Y/N] --> ")
-                    answer = user_input.upper()
-                    if answer == "Y":
-                        print(f"Your response: {answer}\n")
-                        break
-                    elif answer == "N":
-                        print(f"Your response: {answer}")
-                        exit_program()
-                    else:
-                        print("\nInvalid response, please try again\n")
+            if not row["type"]:
+                ask_user_to_confirm("Type", row)
+            elif not row["name"]:
+                ask_user_to_confirm("Name", row)
             elif not row["description"]:
-                while True:
-                    user_input = ask_question(f"Regarding row: \n{row}\nDescription is blank. Continue? [Y/N] --> ")
-                    answer = user_input.upper()
-                    if answer == "Y":
-                        print(f"Your response: {answer}\n")
-                        break
-                    elif answer == "N":
-                        print(f"Your response: {answer}")
-                        exit_program()
-                    else:
-                        print("\nInvalid response, please try again\n")
+                ask_user_to_confirm("Description", row)
             elif not row["auto_resolve_timeout"]:
-                while True:
-                    user_input = ask_question(f"Regarding row: \n{row}\nAuto resolve timeout is blank. "
-                                              f"Continue? [Y/N] --> ")
-                    answer = user_input.upper()
-                    if answer == "Y":
-                        print(f"Your response: {answer}\n")
-                        break
-                    elif answer == "N":
-                        print(f"Your response: {answer}")
-                        exit_program()
-                    else:
-                        print("\nInvalid response, please try again\n")
+                ask_user_to_confirm("Auto Resolve Timeout", row)
+            elif not row["escalation_policy.id"]:
+                ask_user_to_confirm("Escalation Policy ID", row)
+            elif not row["escalation_policy.type"]:
+                ask_user_to_confirm("Escalation Policy Type", row)
             try:
                 service_dict = {"service": {"type": row["type"], "name": row["name"], "description": row["description"],
                                             "auto_resolve_timeout": row["auto_resolve_timeout"],
@@ -93,8 +82,7 @@ def import_services(key, file_data):
         except requests.exceptions.HTTPError as err:
             if response.status_code == 400:
                 print(f'Statuscode: {response.status_code}, the following was NOT imported: \n{payload}\n'
-                      f'Caller provided invalid arguments. Please review the response for error details. '
-                      f'Retrying with the same arguments will not work, {err}\n')
+                      f'Caller provided invalid arguments. Retrying with the same arguments will not work, {err}\n')
             elif response.status_code == 401:
                 print(f'Statuscode: {response.status_code}, the following was NOT imported: \n{payload}\n'
                       f'Caller did not supply credentials or did not provide the correct credentials. '
@@ -103,7 +91,6 @@ def import_services(key, file_data):
             elif response.status_code == 402:
                 print(f'Statuscode: {response.status_code}, the following was NOT imported: \n{payload}\n'
                       f'Account does not have the abilities to perform the action. '
-                      f'Please review the response for the required abilities. '
                       f'You can also use the Abilities API to determine what features are available to your account, '
                       f'{err}\n')
             elif response.status_code == 403:
@@ -130,5 +117,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
