@@ -39,29 +39,34 @@ def read_rows(args):
     key = args.api_key
     filename = args.filename
     file_data = []
-    with open(filename, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            if not row["type"]:
-                ask_user_to_confirm("Type", row)
-            elif not row["name"]:
-                ask_user_to_confirm("Name", row)
-            elif not row["description"]:
-                ask_user_to_confirm("Description", row)
-            elif not row["auto_resolve_timeout"]:
-                ask_user_to_confirm("Auto Resolve Timeout", row)
-            elif not row["escalation_policy.id"]:
-                ask_user_to_confirm("Escalation Policy ID", row)
-            elif not row["escalation_policy.type"]:
-                ask_user_to_confirm("Escalation Policy Type", row)
-            try:
-                service_dict = {"service": {"type": row["type"], "name": row["name"], "description": row["description"],
-                                            "auto_resolve_timeout": row["auto_resolve_timeout"],
-                                            "escalation_policy": {"id": row["escalation_policy.id"],
-                                                                  "type": row["escalation_policy.type"]}}}
-                file_data.append(service_dict)
-            except KeyError as err:
-                print(f'Missing column in file: {err}')
+    try:
+        with open(filename, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if not row["type"]:
+                    ask_user_to_confirm("Type", row)
+                elif not row["name"]:
+                    ask_user_to_confirm("Name", row)
+                elif not row["description"]:
+                    ask_user_to_confirm("Description", row)
+                elif not row["auto_resolve_timeout"]:
+                    ask_user_to_confirm("Auto Resolve Timeout", row)
+                elif not row["escalation_policy.id"]:
+                    ask_user_to_confirm("Escalation Policy ID", row)
+                elif not row["escalation_policy.type"]:
+                    ask_user_to_confirm("Escalation Policy Type", row)
+                try:
+                    service_dict = {"service": {"type": row["type"], "name": row["name"],
+                                                "description": row["description"],
+                                                "auto_resolve_timeout": row["auto_resolve_timeout"],
+                                                "escalation_policy": {"id": row["escalation_policy.id"],
+                                                                      "type": row["escalation_policy.type"]}}}
+                    file_data.append(service_dict)
+                except KeyError as err:
+                    print(f'Missing column in file: {err}')
+
+    except KeyError as err:
+        print(f"CSV file is required, error: {err}")
     import_services(key, file_data)
 
 
