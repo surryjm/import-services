@@ -17,7 +17,6 @@ type,name,description,auto_resolve_timeout,escalation_policy.id,escalation_polic
 ```
 
 In this format:
-- All values are strings
 - The value for `type` should be `service` - *required*
 - `name` is the name of the service - *required*
 - `description` is the description of the service
