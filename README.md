@@ -3,7 +3,7 @@ This script will bulk import services from a CSV file.
 
 The script requires a full access API key (not read-only).
 
-In addition, the corresponding escalation policies must already exist.
+In addition, the corresponding escalation policies must already exist in your PagerDuty account.
 
 Details regarding the PagerDuty REST API are in our Knowledge Base:
 
