@@ -21,7 +21,7 @@ In this format:
 - The value for `type` should be `service` - *required*
 - `name` is the name of the service - *required*
 - `description` is the description of the service
-- `auto_resolve_timeout` is the time in seconds that an incident is automatically resolved if left open for that long.
+- `auto_resolve_timeout` is the time in seconds that an incident is automatically resolved if left open for that long
 - `escalation_policy.id` is the ID of the escalation policy to associate with the service. The ID is located at the end of the URL on the escalation policy page in question. As an example, the ID is `ABC1234` in the following URL: `https://mysubdomain.pagerduty.com/escalation_policies#ABC1234` - *required*
 - The value for `escalation_policy.type` should be `escalation_policy_reference` - *required*
 
