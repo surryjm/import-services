@@ -1,15 +1,14 @@
 # Import Services from CSV
-___
 This script will bulk import services from a CSV file. 
 
 The script requires a full access API key (not read-only).
 
 In addition, the corresponding escalation policies must already exist.
 
-Details regarding the PagerDuty REST API are in our Knowledge Base: https://developer.pagerduty.com/api-reference/7062f2631b397-create-a-service
+Details regarding the PagerDuty REST API are in our Knowledge Base:
+https://developer.pagerduty.com/api-reference/7062f2631b397-create-a-service
 
 ### Input Format:
-___
 To use this script, a CSV file is required with the following column headers in this format:
 
 ```csv
@@ -26,7 +25,6 @@ In this format:
 - The value for `escalation_policy.type` should be `escalation_policy_reference` - *required*
 
 ### Usage:
-___
 First, install dependencies (use `pip3` if `pip` does not work):
 ```csv
 pip install -r requirements.txt
